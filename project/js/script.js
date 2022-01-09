@@ -8,7 +8,7 @@
 
 4. Список фильмов на странрице сформировать на основании данных из этого JS файла. Отсортировать по алфавиту
 
-5.
+5. Добавить нумерация фильмов
 
 6. Реализовать функционал, что после заполнения формы и нажатия кнопки "Подтвердить" -
 новый фильм добавляется в список. Страница не должна перезагружаться.
@@ -55,10 +55,14 @@ document.addEventListener('DOMContentLoaded', () => {
         let newFilm = addInput.value
         const favorite = checkbox.checked
 
-        if(newFilm) {
+        if (newFilm) {
 
-            if(newFilm.length > 21) {
+            if (newFilm.length > 21) {
                 newFilm = '${newFilm.substring(0,22)}...'
+            }
+
+            if(favorite) {
+                console.log('Добавляем любимый фильм')
             }
 
             movieDB.movies.push(newFilm)
@@ -87,11 +91,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createMovieList(films, parent) {
         movieList.innerHTML = '';
+        sortArr(films);
         films.forEach((film, i) => {
-            parent.innerHTML +=   ` <li class="promo__interactive-item"> ${i + 1} ${film} ` +
+            parent.innerHTML += ` <li class="promo__interactive-item"> ${i + 1} ${film} ` +
                 '                <div class="delete"></div>\n' +
                 '        </li>'
         });
+
+        document.querySelectorAll('.delete').forEach((btn, i) => {
+            btn.addEventListener('click', () => {
+                btn.parentElement.remove()
+                movieDB.movies.splice(i, 1)
+
+                createMovieList(films, parent)
+            })
+
+        })
+
     }
 
     sortArr(movieDB.movies)
